@@ -38,8 +38,8 @@ library(gganimate)
 library(transformr)
 preds %>% ggplot(aes(x = x)) +
   geom_point(aes(y = y), alpha = 0.3) +
-  geom_line(aes(y = m), colour = 'darkgreen', size = 1.5) +
-  geom_line(aes(y = pred), colour = 'darkred', size = 1.5) + 
+  geom_line(aes(y = m), colour = 'darkgreen', linewidth = 1.5) +
+  geom_line(aes(y = pred), colour = 'darkred', linewidth = 1.5) + 
   transition_states(iter, transition_length = 0.1, state_length = 0.5) + labs(title = "Iteration: {closest_state}") + theme_bw()
 
 
@@ -59,8 +59,8 @@ preds <- do.call(rbind, lapply(0:fit$n.trees,
 
 preds %>% ggplot(aes(x = x)) +
   geom_point(aes(y = y), alpha = 0.3) +
-  geom_line(aes(y = m), colour = 'darkgreen', size = 1.5) +
-  geom_line(aes(y = pred), colour = 'darkred', size = 1.5) + 
+  geom_line(aes(y = m), colour = 'darkgreen', linewidth = 1.5) +
+  geom_line(aes(y = pred), colour = 'darkred', linewidth = 1.5) + 
   transition_states(iter, transition_length = 0.1, state_length = 0.5) + labs(title = "Iteration: {closest_state}") + theme_bw()
 
 
@@ -80,8 +80,8 @@ preds <- do.call(rbind, lapply(0:fit$n.trees,
 
 preds %>% ggplot(aes(x = x)) +
   geom_point(aes(y = y), alpha = 0.3) +
-  geom_line(aes(y = m), colour = 'darkgreen', size = 1.5) +
-  geom_line(aes(y = pred), colour = 'darkred', size = 1.5) + 
+  geom_line(aes(y = m), colour = 'darkgreen', linewidth = 1.5) +
+  geom_line(aes(y = pred), colour = 'darkred', linewidth = 1.5) + 
   transition_states(iter, transition_length = 0.1, state_length = 0.5) + labs(title = "Iteration: {closest_state}") + theme_bw()
 
 
@@ -102,8 +102,8 @@ preds <- do.call(rbind, lapply(0:fit$n.trees,
 
 preds %>% ggplot(aes(x = x)) +
   geom_point(aes(y = y), alpha = 0.3) +
-  geom_line(aes(y = m), colour = 'darkgreen', size = 1.5) +
-  geom_line(aes(y = pred), colour = 'darkred', size = 1.5) + 
+  geom_line(aes(y = m), colour = 'darkgreen', linewidth = 1.5) +
+  geom_line(aes(y = pred), colour = 'darkred', linewidth = 1.5) + 
   transition_states(iter, transition_length = 0.1, state_length = 0.5) + labs(title = "Iteration: {closest_state}") + theme_bw()
 
 
@@ -118,10 +118,10 @@ fit <- gbm(formula = y ~ x,
 
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
 plot_pred_reg <- function(dt, preds){
-  dt %>% mutate(pred = preds) %>% ggplot(aes(x = x)) +
+  return(dt %>% mutate(pred = preds) %>% ggplot(aes(x = x)) +
     geom_point(aes(y = y), alpha = 0.3) +
-    geom_line(aes(y = m), colour = 'darkgreen', size = 1.5) +
-    geom_line(aes(y = pred), colour = 'darkred', size = 1.5) + theme_bw()
+    geom_line(aes(y = m), colour = 'darkgreen', linewidth = 1.5) +
+    geom_line(aes(y = pred), colour = 'darkred', linewidth = 1.5) + theme_bw())
 }
 
 plot_pred_reg(dt = dfr, preds = predict(fit, n.trees = fit$n.trees, type = 'response'))
@@ -129,8 +129,26 @@ plot_pred_reg(dt = dfr, preds = predict(fit, n.trees = fit$n.trees, type = 'resp
 
 ## Your Turn!
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
+fit <- gbm(formula = y ~ x,
+           data = dfr,
+           distribution = 'gaussian',
+           n.trees = 300,
+           interaction.depth = 3,
+           shrinkage = 0.01,
+           var.monotone = 1) 
+
+plot_pred_reg(dt = dfr, preds = predict(fit, n.trees = fit$n.trees, type = 'response'))
 
 
+fit <- gbm(formula = y ~ x,
+           data = dfr,
+           distribution = 'gaussian',
+           n.trees = 300,
+           interaction.depth = 3,
+           shrinkage = 0.01,
+           var.monotone = -1) 
+
+plot_pred_reg(dt = dfr, preds = predict(fit, n.trees = fit$n.trees, type = 'response'))
 
 
 

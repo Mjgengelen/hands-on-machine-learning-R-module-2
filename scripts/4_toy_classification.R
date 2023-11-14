@@ -68,13 +68,29 @@ plot_pred_class(dt = dfc, preds = predict(fit, dfc, type = 'class'))
 
 ## Your Turn!
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
+# Q1
+set.seed(87654) # reproducibility
+fit <- rpart(formula = y ~ x1 + x2,
+             data = dfc,
+             method = 'class',
+             control = rpart.control(maxdepth = 20,
+                                     minsplit = 10,
+                                     minbucket = 5,
+                                     cp = 0,
+                                     xval = 5))
+# Q2 
+plotcp(fit)
+# Q3
+cpt <- fit$cptable
+# Q4
+min_xerr <- which.min(cpt[,'xerror'])
+se_rule <- min(which(cpt[, 'xerror'] < (cpt[min_xerr, 'xerror'] + cpt[min_xerr, 'xstd'])))
 
+fit_1 <- prune(fit, cp = cpt[min_xerr, 'CP'])
+plot_pred_class(dt = dfc, preds = predict(fit_1, dfc, type = 'class'))
 
-
-
-
-
-
+fit_2 <- prune(fit, cp = cpt[se_rule, 'CP'])
+plot_pred_class(dt = dfc, preds = predict(fit_2, dfc, type = 'class'))
 
 
 

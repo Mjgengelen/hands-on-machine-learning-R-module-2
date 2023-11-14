@@ -43,8 +43,8 @@ fit_b1 <- rpart(formula = y ~ x,
 plot_pred_reg <- function(dt, preds){
   dt %>% mutate(pred = preds) %>% ggplot(aes(x = x)) +
     geom_point(aes(y = y), alpha = 0.3) +
-    geom_line(aes(y = m), colour = 'darkgreen', size = 1.5) +
-    geom_line(aes(y = pred), colour = 'darkred', size = 1.5) + theme_bw()
+    geom_line(aes(y = m), colour = 'darkgreen', linewidth = 1.5) +
+    geom_line(aes(y = pred), colour = 'darkred', linewidth = 1.5) + theme_bw()
 }
 
 plot_pred_reg(dt = dfr, preds = predict(fit_b1, dfr))
@@ -78,12 +78,31 @@ plot_pred_reg(dt = dfr, preds = pred)
 
 ## Your Turn!
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
+# Q1
+set.seed(28726)
+bsample_3 <- dfr %>% nrow %>% sample(replace = TRUE)
+
+dfr_b3 <- dfr %>% dplyr::slice(bsample_3)
+# Q2
+fit_b3 <- rpart(formula = y ~ x,
+                data = dfr_b3,
+                method = 'anova',
+                control = rpart.control(maxdepth = 30,
+                                        minsplit = 20,
+                                        minbucket = 3,
+                                        cp = 0.01))
 
 
+plot_pred_reg(dt = dfr, preds = predict(fit_b3, dfr))
+# Q3
+pred_b3 <- fit_b3 %>% predict(dfr)
 
 
+pred_new <- rowMeans(cbind(pred_b1,
+                           pred_b2,
+                           pred_b3))
 
-
+plot_pred_reg(dt = dfr, preds = pred_new)
 
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
 set.seed(12345)
@@ -141,10 +160,6 @@ ggplot(data.frame('B' = nbags, 'RMSE' = oob), aes(x = B, y = RMSE)) + geom_line(
 
 ## Your Turn!
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-
-
 set.seed(54321) # reproducibility
 dfc <- tibble::tibble(
   x1 = rep(seq(0.1,10,by = 0.1), times = 100),
@@ -159,7 +174,18 @@ dfc <- tibble::tibble(
     )
   )
 )
-
+set.seed(98765) #reproducibility
+# Fit a bagged tree model
+fit <- ipred::bagging(formula = y ~ x1 + x2,
+             data = dfc,
+             nbagg = 100,
+             ns = nrow(dfc),
+             control = rpart.control(
+               maxdepth = 20,
+               minsplit = 10,
+               minbucket = 5,
+               cp = 0)
+)
 
 plot_pred_class <- function(dt, preds){
   dt %>% mutate(pred = preds) %>% ggplot(aes(x = x1, y = x2)) +
@@ -169,4 +195,5 @@ plot_pred_class <- function(dt, preds){
 # See ?ipred::predict.classbagg for prediction arguments
 preds <- predict(fit, dfc, type = 'class', aggregation = 'majority')
 
+plot_pred_class(dfc,preds)
 

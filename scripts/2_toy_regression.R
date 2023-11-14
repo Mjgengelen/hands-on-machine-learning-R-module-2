@@ -15,14 +15,14 @@ dfr <- tibble::tibble(
 
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
 dfr
-ggplot(dfr, aes(x = x)) + geom_point(aes(y = y), alpha = 0.3) + geom_line(aes(y = m), colour = 'darkgreen', size = 1.5)
+ggplot(dfr, aes(x = x)) + geom_point(aes(y = y), alpha = 0.3) + geom_line(aes(y = m), colour = 'darkgreen', linewidth = 1.5)
 
 
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
 library(rpart)
 fit <- rpart(formula = y ~ x,
              data = dfr,
-             method = 'anova',
+             method = 'anova', # MSE  
              control = rpart.control(maxdepth = 1))
 print(fit)
 
@@ -40,8 +40,8 @@ pred <- predict(fit, dfr)
 plot_pred_reg <- function(dt, preds){
   dt %>% mutate(pred = preds) %>% ggplot(aes(x = x)) +
     geom_point(aes(y = y), alpha = 0.3) +
-    geom_line(aes(y = m), colour = 'darkgreen', size = 1.5) +
-    geom_line(aes(y = pred), colour = 'darkred', size = 1.5) + theme_bw()
+    geom_line(aes(y = m), colour = 'darkgreen', linewidth = 1.5) +
+    geom_line(aes(y = pred), colour = 'darkred', linewidth = 1.5) + theme_bw()
 }
 
 plot_pred_reg(dt = dfr, preds = predict(fit, dfr))
@@ -65,14 +65,16 @@ plot_pred_reg(dt = dfr, preds = predict(fit, dfr))
 
 ## Your Turn!
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
+# Q1
+# Subset observations in node 6
+obs <- dfr %>% dplyr::filter(x < 0.535141)
+# Predict
+pred <- mean(obs$y)
+pred
 
-
-
-
-
-
-
-
+# Q2
+dev <- sum((obs$y - pred)^2)
+dev
 
 
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
@@ -85,9 +87,19 @@ fit <- rpart(formula = y ~ x,
                                      cp = 0))
 
 plot_pred_reg(dt = dfr, preds = predict(fit, dfr))
+print(fit)
 
+## --------------------------------------------------------------------------------------------------------------------------------------------------
+fit <- rpart(formula = y ~ x,
+             data = dfr,
+             method = 'anova',
+             control = rpart.control(maxdepth = 20,
+                                     minsplit = 10,
+                                     minbucket = 5,
+                                     cp = 1))
 
-
+plot_pred_reg(dt = dfr, preds = predict(fit, dfr))
+print(fit)
 
 
 

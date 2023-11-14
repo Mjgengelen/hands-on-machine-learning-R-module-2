@@ -21,6 +21,8 @@ print(search_grid)
 
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
 library(ranger)
+# Geen loss function voor poisson, dus poisson deviance ontbreekt en exposure maat is er niet. Mogelijk kijken naar package van Roel:
+# https://github.com/henckr/distRforest
 for(i in seq_len(nrow(search_grid))) {
   fit <- ranger(formula = nclaims ~ ageph + agec + bm + power + coverage + fuel + sex + fleet + use, 
                 data = mtpl, 

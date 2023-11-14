@@ -55,7 +55,8 @@ fit_srt %>%
                pred.fun = pred.fun,
                train = mtpl[pdp_ids,]) %>% 
   autoplot()
-
+## --------------------------------------------------------------------------------------------------------------------------------------------------
+mtpl[pdp_ids,] %>% mutate(ageph = 40) %>% pred.fun(object = fit_srt)
 
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
 fit_srt %>% 
@@ -67,8 +68,26 @@ fit_srt %>%
 
 ## Your Turn!
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
+fit_srt %>% 
+  pdp::partial(pred.var = 'bm',
+               pred.fun = pred.fun,
+               train = mtpl[pdp_ids,]) %>% 
+  autoplot()
 
+fit_srt %>% 
+  pdp::partial(pred.var = 'fuel',
+               pred.fun = pred.fun,
+               train = mtpl[pdp_ids,]) %>% 
+  autoplot()
 
+fit_srt %>% 
+  pdp::partial(pred.var = 'agec',
+               pred.fun = pred.fun,
+               train = mtpl[pdp_ids,]) %>% 
+  autoplot()
 
-
-
+fit_srt %>% 
+  pdp::partial(pred.var = 'coverage',
+               pred.fun = pred.fun,
+               train = mtpl[pdp_ids,]) %>% 
+  autoplot()
