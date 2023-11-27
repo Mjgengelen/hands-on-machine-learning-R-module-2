@@ -83,11 +83,11 @@ xval_log$loss <- c(rep('train',nrow(xval_log)/2),rep('test',nrow(xval_log)/2))
 
 
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
-ggplot(xval_log, aes(x=iteration, y=poisson_nloglik, colour=loss, linetype = loss)) + geom_line(size = 1.3)
+ggplot(xval_log, aes(x=iteration, y=poisson_nloglik, colour=loss, linetype = loss)) + geom_line(linewidth = 1.3)
 
 
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
-ggplot(xval_log[c(150:200,350:400),], aes(x=iteration, y=poisson_nloglik, colour=loss, linetype = loss)) + geom_line(size = 1.5)
+ggplot(xval_log[c(150:200,350:400),], aes(x=iteration, y=poisson_nloglik, colour=loss, linetype = loss)) + geom_line(linewidth = 1.5)
 
 
 ## Your Turn!

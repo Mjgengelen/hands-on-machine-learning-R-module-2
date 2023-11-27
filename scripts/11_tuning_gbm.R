@@ -68,24 +68,39 @@ results %>% ggplot(aes(x = x1, y = x2)) +
 
 ## Your Turn!
 ## --------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-my_grid <- expand.grid(...)
+my_grid <- expand.grid(depth = c(1,3,5),
+                       shrinkage = c(0.01,0.1,1))
 my_grid <- my_grid %>% dplyr::mutate(oob_improv = NA)
+my_grid <- my_grid %>% dplyr::mutate(cv_improv = NA)
+
 
 for(i in seq_len(nrow(my_grid))) {
   fit <- gbm(y_recode ~ x1 + x2,
              data = dfc,
              distribution = 'bernoulli',
-             n.trees = ...,
-             interaction.depth = ...,
-             shrinkage = ...,
-             ...)
+             n.trees = 100,
+             interaction.depth = my_grid$depth[i],
+             shrinkage = my_grid$shrinkage[i]
+             )
   my_grid$oob_improv[i] <- sum(fit$oobag.improve)
+  #A nother tuning option is to set cv.folds > 0 and track the cross-validation error via fit$cv.error .
 }
 
+my_grid[order(my_grid$oob_improv,decreasing = T),]
+# Beste depth 5 shrinkage 0.1
 
-
-
-
+# for(i in seq_len(nrow(my_grid))) {
+#   fit2 <- gbm(y_recode ~ x1 + x2,
+#              data = dfc,
+#              distribution = 'bernoulli',
+#              n.trees = 100,
+#              interaction.depth = my_grid$depth[i],
+#              shrinkage = my_grid$shrinkage[i],
+#              cv.folds = 3
+#   )
+#   my_grid$cv_improv[i] <- sum(fit2$cv.error)
+#   #A nother tuning option is to set cv.folds > 0 and track the cross-validation error via fit$cv.error .
+# }
+# 
+# my_grid[order(my_grid$cv_improv,decreasing = F),]
 
