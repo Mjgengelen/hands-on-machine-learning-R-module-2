@@ -91,8 +91,3 @@ plot_pred_class(dt = dfc, preds = predict(fit_1, dfc, type = 'class'))
 
 fit_2 <- prune(fit, cp = cpt[se_rule, 'CP'])
 plot_pred_class(dt = dfc, preds = predict(fit_2, dfc, type = 'class'))
-
-
-
-
-

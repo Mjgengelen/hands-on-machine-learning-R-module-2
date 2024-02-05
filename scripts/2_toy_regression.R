@@ -100,7 +100,3 @@ fit <- rpart(formula = y ~ x,
 
 plot_pred_reg(dt = dfr, preds = predict(fit, dfr))
 print(fit)
-
-
-
-

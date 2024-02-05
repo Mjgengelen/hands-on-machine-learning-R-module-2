@@ -149,10 +149,3 @@ fit <- gbm(formula = y ~ x,
            var.monotone = -1) 
 
 plot_pred_reg(dt = dfr, preds = predict(fit, n.trees = fit$n.trees, type = 'response'))
-
-
-
-
-
-
-
